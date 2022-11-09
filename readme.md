@@ -320,6 +320,7 @@ Modules in beta are still included in releases for the most part but not enabled
 | airspyhf_source     | Working    | libairspyhf       | OPT_BUILD_AIRSPYHF_SOURCE     | ✅              | ✅                     | ✅                         |
 | bladerf_source      | Working    | libbladeRF        | OPT_BUILD_BLADERF_SOURCE      | ⛔              | ⚠️ (not Debian Buster) | ✅                         |
 | file_source         | Working    | -                 | OPT_BUILD_FILE_SOURCE         | ✅              | ✅                     | ✅                         |
+| raw_file_source     | Working    | -                 | OPT_BUILD_RAW_FILE_SOURCE     | ✅              | ✅                     | ✅                         |
 | hackrf_source       | Working    | libhackrf         | OPT_BUILD_HACKRF_SOURCE       | ✅              | ✅                     | ✅                         |
 | hermes_source       | Unfinished | -                 | OPT_BUILD_HERMES_SOURCE       | ✅              | ✅                     | ⛔                         |
 | limesdr_source      | Working    | liblimesuite      | OPT_BUILD_LIMESDR_SOURCE      | ⛔              | ✅                     | ✅                         |

@@ -29,6 +29,7 @@ option(OPT_BUILD_AIRSPY_SOURCE "Build Airspy Source Module (Dependencies: libair
 option(OPT_BUILD_AIRSPYHF_SOURCE "Build Airspy HF+ Source Module (Dependencies: libairspyhf)" ON)
 option(OPT_BUILD_BLADERF_SOURCE "Build BladeRF Source Module (Dependencies: libbladeRF)" OFF)
 option(OPT_BUILD_FILE_SOURCE "Wav file source" ON)
+option(OPT_BUILD_RAW_FILE_SOURCE "Raw file source" ON)
 option(OPT_BUILD_HACKRF_SOURCE "Build HackRF Source Module (Dependencies: libhackrf)" ON)
 option(OPT_BUILD_HERMES_SOURCE "Build Hermes Source Module (no dependencies required)" ON)
 option(OPT_BUILD_LIMESDR_SOURCE "Build LimeSDR Source Module (Dependencies: liblimesuite)" OFF)
@@ -89,6 +90,10 @@ endif (OPT_BUILD_BLADERF_SOURCE)
 if (OPT_BUILD_FILE_SOURCE)
 add_subdirectory("source_modules/file_source")
 endif (OPT_BUILD_FILE_SOURCE)
+
+if (OPT_BUILD_RAW_FILE_SOURCE)
+add_subdirectory("source_modules/raw_file_source")
+endif (OPT_BUILD_RAW_FILE_SOURCE)
 
 if (OPT_BUILD_HACKRF_SOURCE)
 add_subdirectory("source_modules/hackrf_source")
