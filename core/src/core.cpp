@@ -80,7 +80,11 @@ int sdrpp_main(int argc, char* argv[]) {
     bool serverMode = (bool)core::args["server"];
 
 #ifdef _WIN32
+    // Free console if the user hasn't asked for a console and not in server mode
     if (!core::args["con"].b() && !serverMode) { FreeConsole(); }
+
+    // Set error mode to avoid abnoxious popups
+    SetErrorMode(SEM_NOOPENFILEERRORBOX | SEM_NOGPFAULTERRORBOX | SEM_FAILCRITICALERRORS);
 #endif
 
     // Check root directory
@@ -145,9 +149,6 @@ int sdrpp_main(int argc, char* argv[]) {
     defConfig["menuElements"][4]["name"] = "VFO Color";
     defConfig["menuElements"][4]["open"] = true;
 
-    defConfig["menuElements"][5]["name"] = "Scripting";
-    defConfig["menuElements"][5]["open"] = false;
-
     defConfig["menuElements"][6]["name"] = "Band Plan";
     defConfig["menuElements"][6]["open"] = true;
 
@@ -168,8 +169,12 @@ int sdrpp_main(int argc, char* argv[]) {
     defConfig["moduleInstances"]["File Source"]["enabled"] = true;
     defConfig["moduleInstances"]["HackRF Source"]["module"] = "hackrf_source";
     defConfig["moduleInstances"]["HackRF Source"]["enabled"] = true;
+    defConfig["moduleInstances"]["Hermes Source"]["module"] = "hermes_source";
+    defConfig["moduleInstances"]["Hermes Source"]["enabled"] = true;
     defConfig["moduleInstances"]["LimeSDR Source"]["module"] = "limesdr_source";
     defConfig["moduleInstances"]["LimeSDR Source"]["enabled"] = true;
+    defConfig["moduleInstances"]["PlutoSDR Source"]["module"] = "plutosdr_source";
+    defConfig["moduleInstances"]["PlutoSDR Source"]["enabled"] = true;
     defConfig["moduleInstances"]["RFspace Source"]["module"] = "rfspace_source";
     defConfig["moduleInstances"]["RFspace Source"]["enabled"] = true;
     defConfig["moduleInstances"]["RTL-SDR Source"]["module"] = "rtl_sdr_source";
@@ -184,8 +189,6 @@ int sdrpp_main(int argc, char* argv[]) {
     defConfig["moduleInstances"]["SoapySDR Source"]["enabled"] = true;
     defConfig["moduleInstances"]["SpyServer Source"]["module"] = "spyserver_source";
     defConfig["moduleInstances"]["SpyServer Source"]["enabled"] = true;
-    defConfig["moduleInstances"]["PlutoSDR Source"]["module"] = "plutosdr_source";
-    defConfig["moduleInstances"]["PlutoSDR Source"]["enabled"] = true;
 
     defConfig["moduleInstances"]["Audio Sink"] = "audio_sink";
     defConfig["moduleInstances"]["Network Sink"] = "network_sink";
@@ -266,11 +269,12 @@ int sdrpp_main(int argc, char* argv[]) {
     core::configManager.conf["modules"][modCount++] = "airspy_source.so";
     core::configManager.conf["modules"][modCount++] = "airspyhf_source.so";
     core::configManager.conf["modules"][modCount++] = "hackrf_source.so";
+    core::configManager.conf["modules"][modCount++] = "hermes_source.so";
     core::configManager.conf["modules"][modCount++] = "plutosdr_source.so";
-    core::configManager.conf["modules"][modCount++] = "sdrpp_server_source.so";
     core::configManager.conf["modules"][modCount++] = "rfspace_source.so";
     core::configManager.conf["modules"][modCount++] = "rtl_sdr_source.so";
     core::configManager.conf["modules"][modCount++] = "rtl_tcp_source.so";
+    core::configManager.conf["modules"][modCount++] = "sdrpp_server_source.so";
     core::configManager.conf["modules"][modCount++] = "spyserver_source.so";
 
     core::configManager.conf["modules"][modCount++] = "network_sink.so";
