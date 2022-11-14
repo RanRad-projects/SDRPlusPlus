@@ -19,6 +19,11 @@ SDR++ is a cross-platform and open source SDR software with the aim of being blo
 * Full waterfall update when possible. Makes browsing signals easier and more pleasant
 * Modular design (easily write your own plugins)
 
+## Extra features (in this fork)
+
+* raw file source (play back raw s8, u8, s16 and f32 files)
+* signalstrengthgraph, plot average signal strength in specified bandwidth (useful for sun noise or similar)
+
 # Installing
 
 ## Nightly Builds
@@ -367,15 +372,16 @@ Modules in beta are still included in releases for the most part but not enabled
 
 ## Misc
 
-| Name                | Stage      | Dependencies | Option                      | Built by default | Built in Release | Enabled in SDR++ by default |
-|---------------------|------------|--------------|-----------------------------|:----------------:|:----------------:|:---------------------------:|
-| discord_integration | Working    | -            | OPT_BUILD_DISCORD_PRESENCE  | ✅              | ✅               | ⛔                         |
-| frequency_manager   | Working    | -            | OPT_BUILD_FREQUENCY_MANAGER | ✅              | ✅               | ✅                         |
-| recorder            | Working    | -            | OPT_BUILD_RECORDER          | ✅              | ✅               | ✅                         |
-| rigctl_client       | Unfinished | -            | OPT_BUILD_RIGCTL_CLIENT     | ⛔              | ⛔               | ⛔                         |
-| rigctl_server       | Working    | -            | OPT_BUILD_RIGCTL_SERVER     | ✅              | ✅               | ✅                         |
-| scanner             | Beta       | -            | OPT_BUILD_SCANNER           | ✅              | ✅               | ✅                         |
-| scheduler           | Unfinished | -            | OPT_BUILD_SCHEDULER         | ⛔              | ⛔               | ⛔                         |
+| Name                | Stage      | Dependencies | Option                        | Built by default | Built in Release | Enabled in SDR++ by default |
+|---------------------|------------|--------------|-------------------------------|:----------------:|:----------------:|:---------------------------:|
+| discord_integration | Working    | -            | OPT_BUILD_DISCORD_PRESENCE    | ✅              | ✅               | ⛔                         |
+| frequency_manager   | Working    | -            | OPT_BUILD_FREQUENCY_MANAGER   | ✅              | ✅               | ✅                         |
+| recorder            | Working    | -            | OPT_BUILD_RECORDER            | ✅              | ✅               | ✅                         |
+| rigctl_client       | Unfinished | -            | OPT_BUILD_RIGCTL_CLIENT       | ⛔              | ⛔               | ⛔                         |
+| rigctl_server       | Working    | -            | OPT_BUILD_RIGCTL_SERVER       | ✅              | ✅               | ✅                         |
+| scanner             | Beta       | -            | OPT_BUILD_SCANNER             | ✅              | ✅               | ✅                         |
+| scheduler           | Unfinished | -            | OPT_BUILD_SCHEDULER           | ⛔              | ⛔               | ⛔                         |
+| signalstrengthgraph | Working    | -            | OPT_BUILD_SIGNALSTRENGTHGRAPH | ✅              | ✅               | ⛔                         |
 
 # Troubleshooting
 
@@ -478,6 +484,7 @@ I will soon publish a contributing.md listing the code style to use.
 
 * [SoapySDR (PothosWare)](https://github.com/pothosware/SoapySDR)
 * [Dear ImGui (ocornut)](https://github.com/ocornut/imgui)
+* [implot (epezent)](https://github.com/epezent/implot)
 * [spdlog (gabime)](https://github.com/gabime/spdlog)
 * [json (nlohmann)](https://github.com/nlohmann/json)
 * [rtaudio](http://www.portaudio.com/)
