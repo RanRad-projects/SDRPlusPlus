@@ -334,7 +334,7 @@ Modules in beta are still included in releases for the most part but not enabled
 | airspyhf_source      | Working    | libairspyhf       | OPT_BUILD_AIRSPYHF_SOURCE      | ✅              | ✅                     | ✅                         |
 | bladerf_source       | Working    | libbladeRF        | OPT_BUILD_BLADERF_SOURCE       | ⛔              | ⚠️ (not Debian Buster) | ✅                         |
 | file_source          | Working    | -                 | OPT_BUILD_FILE_SOURCE          | ✅              | ✅                     | ✅                         |
-| raw_file_source      | Working    | -                 | OPT_BUILD_RAW_FILE_SOURCE      | ✅              | ✅                     | ✅                         |
+| raw_file_source      | Working    | -                 | OPT_BUILD_RAW_FILE_SOURCE      | ✅              | ✅                     | ⛔                         |
 | hackrf_source        | Working    | libhackrf         | OPT_BUILD_HACKRF_SOURCE        | ✅              | ✅                     | ✅                         |
 | hermes_source        | Beta       | -                 | OPT_BUILD_HERMES_SOURCE        | ✅              | ✅                     | ⛔                         |
 | limesdr_source       | Working    | liblimesuite      | OPT_BUILD_LIMESDR_SOURCE       | ⛔              | ✅                     | ✅                         |
@@ -363,7 +363,7 @@ Modules in beta are still included in releases for the most part but not enabled
 
 | Name                | Stage      | Dependencies | Option                        | Built by default| Built in Release | Enabled in SDR++ by default |
 |---------------------|------------|--------------|-------------------------------|:---------------:|:----------------:|:---------------------------:|
-| atv_decoder         | Unfinished | -            | OPT_BUILD_ATV_DECODER         | ⛔              | ⛔              | ⛔                         |
+| atv_decoder         | Unfinished | -            | OPT_BUILD_ATV_DECODER         | ✅              | ✅              | ⛔                         |
 | dmr_decoder         | Unfinished | -            | OPT_BUILD_DMR_DECODER         | ⛔              | ⛔              | ⛔                         |
 | falcon9_decoder     | Unfinished | ffplay       | OPT_BUILD_FALCON9_DECODER     | ⛔              | ⛔              | ⛔                         |
 | kgsstv_decoder      | Unfinished | -            | OPT_BUILD_KGSSTV_DECODER      | ⛔              | ⛔              | ⛔                         |

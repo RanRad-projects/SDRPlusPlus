@@ -54,7 +54,7 @@ option(OPT_BUILD_NETWORK_SINK "Build Audio Sink Module (no dependencies required
 option(OPT_BUILD_NEW_PORTAUDIO_SINK "Build the new PortAudio Sink Module (Dependencies: portaudio)" OFF)
 
 # Decoders
-option(OPT_BUILD_ATV_DECODER "Build ATV decoder (no dependencies required)" OFF)
+option(OPT_BUILD_ATV_DECODER "Build ATV decoder (no dependencies required)" ON)
 option(OPT_BUILD_FALCON9_DECODER "Build the falcon9 live decoder (Dependencies: ffplay)" OFF)
 option(OPT_BUILD_KG_SSTV_DECODER "Build the M17 decoder module (no dependencies required)" OFF)
 option(OPT_BUILD_M17_DECODER "Build the M17 decoder module (Dependencies: codec2)" OFF)
