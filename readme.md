@@ -23,7 +23,6 @@ SDR++ is a cross-platform and open source SDR software with the aim of being blo
 
 * raw file source (play back raw s8, u8, s16 and f32 files)
 * signalstrengthgraph, plot average signal strength in specified bandwidth (useful for sun noise or similar)
-* audio source
 
 # Installing
 
@@ -333,7 +332,6 @@ Modules in beta are still included in releases for the most part but not enabled
 |----------------------|------------|-------------------|--------------------------------|:---------------:|:-----------------------:|:---------------------------:|
 | airspy_source        | Working    | libairspy         | OPT_BUILD_AIRSPY_SOURCE        | ✅              | ✅                     | ✅                         |
 | airspyhf_source      | Working    | libairspyhf       | OPT_BUILD_AIRSPYHF_SOURCE      | ✅              | ✅                     | ✅                         |
-| audio_source         | Working    | rtaudio           | OPT_BUILD_AUDIO_SOURCE         | ✅              | ✅                     | ✅                         |
 | bladerf_source       | Working    | libbladeRF        | OPT_BUILD_BLADERF_SOURCE       | ⛔              | ⚠️ (not Debian Buster) | ✅                         |
 | file_source          | Working    | -                 | OPT_BUILD_FILE_SOURCE          | ✅              | ✅                     | ✅                         |
 | raw_file_source      | Working    | -                 | OPT_BUILD_RAW_FILE_SOURCE      | ✅              | ✅                     | ⛔                         |

@@ -13,16 +13,16 @@
 
 #define CONCAT(a, b) ((std::string(a) + b).c_str())
 
-SDRPP_MOD_INFO{/* Name:            */ "atv_decoder",
-               /* Description:     */ "ATV decoder for SDR++",
-               /* Author:          */ "Ryzerth",
-               /* Version:         */ 0, 1, 0,
-               /* Max instances    */ -1};
+SDRPP_MOD_INFO{ /* Name:            */ "atv_decoder",
+                /* Description:     */ "ATV decoder for SDR++",
+                /* Author:          */ "Ryzerth",
+                /* Version:         */ 0, 1, 0,
+                /* Max instances    */ -1 };
 
 #define SAMPLE_RATE (625.0f * 720.0f * 25.0f)
 
 class ATVDecoderModule : public ModuleManager::Instance {
-  public:
+public:
     ATVDecoderModule(std::string name) : img(720, 625) {
         this->name = name;
 
@@ -47,15 +47,28 @@ class ATVDecoderModule : public ModuleManager::Instance {
 
     void postInit() {}
 
-    void enable() { enabled = true; }
+    void enable() {
+        vfo = sigpath::vfoManager.createVFO(name, ImGui::WaterfallVFO::REF_CENTER, 0, 8000000.0f, SAMPLE_RATE, SAMPLE_RATE, SAMPLE_RATE, true);
+        demod.setInput(vfo->output);
 
-    void disable() { enabled = false; }
+        demod.start();
+        sink.start();
+        enabled = true;
+    }
+
+    void disable() {
+        enabled = false;
+        demod.stop();
+        sink.stop();
+
+        sigpath::vfoManager.deleteVFO(vfo);
+    }
 
     bool isEnabled() { return enabled; }
 
-  private:
-    static void menuHandler(void *ctx) {
-        ATVDecoderModule *_this = (ATVDecoderModule *)ctx;
+private:
+    static void menuHandler(void* ctx) {
+        ATVDecoderModule* _this = (ATVDecoderModule*)ctx;
 
         if (!_this->enabled) {
             style::beginDisabled();
@@ -81,10 +94,10 @@ class ATVDecoderModule : public ModuleManager::Instance {
         }
     }
 
-    static void handler(float *data, int count, void *ctx) {
-        ATVDecoderModule *_this = (ATVDecoderModule *)ctx;
+    static void handler(float* data, int count, void* ctx) {
+        ATVDecoderModule* _this = (ATVDecoderModule*)ctx;
 
-        uint8_t *buf = (uint8_t *)_this->img.buffer;
+        uint8_t* buf = (uint8_t*)_this->img.buffer;
         float val;
         float imval;
         int pos = 0;
@@ -103,7 +116,7 @@ class ATVDecoderModule : public ModuleManager::Instance {
                         _this->even_field = false;
                         _this->ypos = 0;
                         _this->img.swap();
-                        buf = (uint8_t *)_this->img.buffer;
+                        buf = (uint8_t*)_this->img.buffer;
                     }
                     else if (_this->short_sync == 4) {
                         _this->even_field = true;
@@ -145,7 +158,7 @@ class ATVDecoderModule : public ModuleManager::Instance {
                 _this->even_field = !_this->even_field;
                 if (_this->even_field) {
                     _this->img.swap();
-                    buf = (uint8_t *)_this->img.buffer;
+                    buf = (uint8_t*)_this->img.buffer;
                 }
             }
         }
@@ -154,7 +167,7 @@ class ATVDecoderModule : public ModuleManager::Instance {
     std::string name;
     bool enabled = true;
 
-    VFOManager::VFO *vfo = NULL;
+    VFOManager::VFO* vfo = NULL;
     dsp::demod::Quadrature demod;
     dsp::sink::Handler<float> sink;
 
@@ -174,8 +187,8 @@ class ATVDecoderModule : public ModuleManager::Instance {
 
 MOD_EXPORT void _INIT_() {}
 
-MOD_EXPORT ModuleManager::Instance *_CREATE_INSTANCE_(std::string name) { return new ATVDecoderModule(name); }
+MOD_EXPORT ModuleManager::Instance* _CREATE_INSTANCE_(std::string name) { return new ATVDecoderModule(name); }
 
-MOD_EXPORT void _DELETE_INSTANCE_(void *instance) { delete (ATVDecoderModule *)instance; }
+MOD_EXPORT void _DELETE_INSTANCE_(void* instance) { delete (ATVDecoderModule*)instance; }
 
 MOD_EXPORT void _END_() {}
