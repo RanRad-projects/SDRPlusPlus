@@ -1,24 +1,6 @@
 cmake_minimum_required(VERSION 3.13)
 project(sdrpp)
 
-if (CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
-    if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
-        set(CMAKE_INSTALL_PREFIX "/usr/local")
-    else()
-        set(CMAKE_INSTALL_PREFIX "/usr")
-    endif()
-endif()
-
-# Configure toolchain for android
-if (ANDROID)
-    set(CMAKE_SHARED_LINKER_FLAGS
-        "${CMAKE_SHARED_LINKER_FLAGS} -u ANativeActivity_onCreate"
-    )
-    set(CMAKE_C_STANDARD 11)
-    set(CMAKE_CXX_STANDARD 14)
-    set(CMAKE_CXX14_EXTENSION_COMPILE_OPTION "-std=c++17")
-endif (ANDROID)
-
 # Backends
 option(OPT_BACKEND_GLFW "Use the GLFW backend" ON)
 option(OPT_BACKEND_ANDROID "Use the Android backend" OFF)
@@ -58,7 +40,7 @@ option(OPT_BUILD_NEW_PORTAUDIO_SINK "Build the new PortAudio Sink Module (Depend
 # Decoders
 option(OPT_BUILD_ATV_DECODER "Build ATV decoder (no dependencies required)" ON)
 option(OPT_BUILD_FALCON9_DECODER "Build the falcon9 live decoder (Dependencies: ffplay)" OFF)
-option(OPT_BUILD_KG_SSTV_DECODER "Build the M17 decoder module (no dependencies required)" OFF)
+option(OPT_BUILD_KG_SSTV_DECODER "Build the KG SSTV (KG-STV) decoder module (no dependencies required)" OFF)
 option(OPT_BUILD_M17_DECODER "Build the M17 decoder module (Dependencies: codec2)" OFF)
 option(OPT_BUILD_METEOR_DEMODULATOR "Build the meteor demodulator module (no dependencies required)" ON)
 option(OPT_BUILD_RADIO "Main audio modulation decoder (AM, FM, SSB, etc...)" ON)
@@ -68,7 +50,7 @@ option(OPT_BUILD_WEATHER_SAT_DECODER "Build the HRPT decoder module (no dependen
 option(OPT_BUILD_DISCORD_PRESENCE "Build the Discord Rich Presence module" ON)
 option(OPT_BUILD_FREQUENCY_MANAGER "Build the Frequency Manager module" ON)
 option(OPT_BUILD_RECORDER "Audio and baseband recorder" ON)
-option(OPT_BUILD_RIGCTL_CLIENT "Rigctl client to make SDR++ act as a panadapter" OFF)
+option(OPT_BUILD_RIGCTL_CLIENT "Rigctl client to make SDR++ act as a panadapter" ON)
 option(OPT_BUILD_RIGCTL_SERVER "Rigctl backend for controlling SDR++ with software like gpredict" ON)
 option(OPT_BUILD_SCANNER "Frequency scanner" ON)
 option(OPT_BUILD_SCHEDULER "Build the scheduler" OFF)
@@ -77,6 +59,53 @@ option(OPT_BUILD_SIGNALSTRENGTHGRAPH "Build signal strength graph" ON)
 # Other options
 option(USE_INTERNAL_LIBCORRECT "Use an internal version of libcorrect" ON)
 option(USE_BUNDLE_DEFAULTS "Set the default resource and module directories to the right ones for a MacOS .app" OFF)
+
+# Module cmake path
+set(SDRPP_MODULE_CMAKE "${CMAKE_SOURCE_DIR}/sdrpp_module.cmake")
+
+# Root source folder
+set(SDRPP_CORE_ROOT "${CMAKE_SOURCE_DIR}/core/src/")
+
+# Compiler flags
+if (${CMAKE_BUILD_TYPE} MATCHES "Debug")
+    # Debug Flags
+    if (MSVC)
+        set(SDRPP_COMPILER_FLAGS /std:c++17 /EHsc)
+    elseif (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+        set(SDRPP_COMPILER_FLAGS -g -Og -std=c++17 -Wno-unused-command-line-argument -undefined dynamic_lookup)
+    else ()
+        set(SDRPP_COMPILER_FLAGS -g -Og -std=c++17)
+    endif ()
+else()
+    # Normal Flags
+    if (MSVC)
+        set(SDRPP_COMPILER_FLAGS /O2 /Ob2 /std:c++17 /EHsc)
+    elseif (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+        set(SDRPP_COMPILER_FLAGS -O3 -std=c++17 -Wno-unused-command-line-argument -undefined dynamic_lookup)
+    else ()
+        set(SDRPP_COMPILER_FLAGS -O3 -std=c++17)
+    endif ()
+endif()
+set(SDRPP_MODULE_COMPILER_FLAGS ${SDRPP_COMPILER_FLAGS})
+
+# Set a default install prefix
+if (CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
+    if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+        set(CMAKE_INSTALL_PREFIX "/usr/local" CACHE PATH "..." FORCE)
+    else()
+        set(CMAKE_INSTALL_PREFIX "/usr" CACHE PATH "..." FORCE)
+    endif()
+endif()
+
+# Configure toolchain for android
+if (ANDROID)
+    set(CMAKE_SHARED_LINKER_FLAGS
+        "${CMAKE_SHARED_LINKER_FLAGS} -u ANativeActivity_onCreate"
+    )
+    set(CMAKE_C_STANDARD 11)
+    set(CMAKE_CXX_STANDARD 14)
+    set(CMAKE_CXX14_EXTENSION_COMPILE_OPTION "-std=c++17")
+endif (ANDROID)
 
 # Core of SDR++
 add_subdirectory("core")
@@ -251,15 +280,8 @@ endif (OPT_BUILD_SIGNALSTRENGTHGRAPH)
 add_executable(sdrpp "src/main.cpp" "win32/resources.rc")
 target_link_libraries(sdrpp PRIVATE sdrpp_core)
 
-# Compiler arguments for each platform
-if (MSVC)
-    target_compile_options(sdrpp PRIVATE /O2 /Ob2 /std:c++17 /EHsc)
-elseif (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-    target_compile_options(sdrpp PRIVATE -O3 -std=c++17 -Wno-unused-command-line-argument -undefined dynamic_lookup)
-else ()
-    target_compile_options(sdrpp PRIVATE -O3 -std=c++17)
-endif ()
-
+# Compiler arguments
+target_compile_options(sdrpp PRIVATE ${SDRPP_COMPILER_FLAGS})
 
 # Copy dynamic libs over
 if (MSVC)
@@ -286,6 +308,9 @@ if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
 endif ()
 
 # cmake .. "-DCMAKE_TOOLCHAIN_FILE=C:/dev/vcpkg/scripts/buildsystems/vcpkg.cmake" -DOPT_BUILD_BLADERF_SOURCE=ON -DOPT_BUILD_LIMESDR_SOURCE=ON -DOPT_BUILD_SDRPLAY_SOURCE=ON -DOPT_BUILD_M17_DECODER=ON -DOPT_BUILD_SCANNER=ON -DOPT_BUILD_SCHEDULER=ON -DOPT_BUILD_USRP_SOURCE=ON
+
+# Create module cmake file
+configure_file(${CMAKE_SOURCE_DIR}/sdrpp_module.cmake ${CMAKE_CURRENT_BINARY_DIR}/sdrpp_module.cmake @ONLY)
 
 # Install directives
 install(TARGETS sdrpp DESTINATION bin)
