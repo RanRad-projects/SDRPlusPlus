@@ -1,5 +1,5 @@
 #include <imgui.h>
-#include <spdlog/spdlog.h>
+#include <utils/flog.h>
 #include <module.h>
 #include <gui/gui.h>
 #include <signal_path/signal_path.h>
@@ -74,7 +74,7 @@ private:
         // gui::freqSelect.minFreq = _this->centerFreq - (_this->sampleRate/2);
         // gui::freqSelect.maxFreq = _this->centerFreq + (_this->sampleRate/2);
         // gui::freqSelect.limitFreq = true;
-        spdlog::info("RawFileSourceModule '{0}': Menu Select!", _this->name);
+        flog::info("RawFileSourceModule '{0}': Menu Select!", _this->name);
     }
 
     static void menuDeselected(void* ctx) {
@@ -82,7 +82,7 @@ private:
         sigpath::iqFrontEnd.setBuffering(true);
         // gui::freqSelect.limitFreq = false;
         gui::waterfall.centerFrequencyLocked = false;
-        spdlog::info("RawFileSourceModule '{0}': Menu Deselect!", _this->name);
+        flog::info("RawFileSourceModule '{0}': Menu Deselect!", _this->name);
     }
 
     static void start(void* ctx) {
@@ -92,7 +92,7 @@ private:
         if (_this->reader == NULL) { return; }
         _this->running = true;
         _this->workerThread = std::thread(worker, _this);
-        spdlog::info("RawFileSourceModule '{0}': Start!", _this->name);
+        flog::info("RawFileSourceModule '{0}': Start!", _this->name);
     }
 
     static void stop(void* ctx) {
@@ -104,12 +104,12 @@ private:
         _this->stream.clearWriteStop();
         _this->running = false;
         _this->reader->rewind();
-        spdlog::info("RawFileSourceModule '{0}': Stop!", _this->name);
+        flog::info("RawFileSourceModule '{0}': Stop!", _this->name);
     }
 
     static void tune(double freq, void* ctx) {
         RawFileSourceModule* _this = (RawFileSourceModule*)ctx;
-        spdlog::info("RawFileSourceModule '{0}': Tune: {1}!", _this->name, freq);
+        flog::info("RawFileSourceModule '{0}': Tune: {1}!", _this->name, freq);
     }
 
     static void menuHandler(void* ctx) {
@@ -132,7 +132,7 @@ private:
                     // gui::freqSelect.limitFreq = true;
                 }
                 catch (std::exception e) {
-                    spdlog::error("Error: {0}", e.what());
+                    flog::error("Error: {0}", e.what());
                 }
                 config.acquire();
                 config.conf["path"] = _this->fileSelect.path;
@@ -175,7 +175,7 @@ private:
         std::regex expr("[0-9]+Hz");
         std::smatch matches;
         std::regex_search(filename, matches, expr);
-        spdlog::warn("{0} {1}", filename, matches.size());
+        flog::warn("{0} {1}", filename, matches.size());
         if (matches.empty()) { return 0; }
         std::string freqStr = matches[0].str();
         return std::atof(freqStr.substr(0, freqStr.size() - 2).c_str());
