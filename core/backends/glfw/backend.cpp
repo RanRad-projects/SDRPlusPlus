@@ -4,7 +4,7 @@
 #include "imgui_impl_opengl3.h"
 #include "implot.h"
 #include <GLFW/glfw3.h>
-#include <spdlog/spdlog.h>
+#include <utils/flog.h>
 #include <utils/opengl_include_code.h>
 #include <version.h>
 #include <core.h>
@@ -51,7 +51,7 @@ namespace backend {
     GLFWmonitor* monitor;
 
     static void glfw_error_callback(int error, const char* description) {
-        spdlog::error("Glfw Error {0}: {1}", error, description);
+        flog::error("Glfw Error {0}: {1}", error, description);
     }
 
     static void maximized_callback(GLFWwindow* window, int n) {
@@ -105,10 +105,10 @@ namespace backend {
             monitor = glfwGetPrimaryMonitor();
             window = glfwCreateWindow(winWidth, winHeight, "SDR++ v" VERSION_STR " (Built at " __TIME__ ", " __DATE__ ")", NULL, NULL);
             if (window == NULL) {
-                spdlog::info("OpenGL {0}.{1} {2}was not supported", OPENGL_VERSIONS_MAJOR[i], OPENGL_VERSIONS_MINOR[i], OPENGL_VERSIONS_IS_ES[i] ? "ES " : "");
+                flog::info("OpenGL {0}.{1} {2}was not supported", OPENGL_VERSIONS_MAJOR[i], OPENGL_VERSIONS_MINOR[i], OPENGL_VERSIONS_IS_ES[i] ? "ES " : "");
                 continue;
             }
-            spdlog::info("Using OpenGL {0}.{1}{2}", OPENGL_VERSIONS_MAJOR[i], OPENGL_VERSIONS_MINOR[i], OPENGL_VERSIONS_IS_ES[i] ? " ES" : "");
+            flog::info("Using OpenGL {0}.{1}{2}", OPENGL_VERSIONS_MAJOR[i], OPENGL_VERSIONS_MINOR[i], OPENGL_VERSIONS_IS_ES[i] ? " ES" : "");
             glfwMakeContextCurrent(window);
             break;
         }
@@ -117,7 +117,7 @@ namespace backend {
 
         // Load app icon
         if (!std::filesystem::is_regular_file(resDir + "/icons/sdrpp.png")) {
-            spdlog::error("Icon file '{0}' doesn't exist!", resDir + "/icons/sdrpp.png");
+            flog::error("Icon file '{0}' doesn't exist!", resDir + "/icons/sdrpp.png");
             return 1;
         }
 
@@ -178,9 +178,9 @@ namespace backend {
 
         if (!ImGui_ImplOpenGL3_Init(glsl_version)) {
             // If init fail, try to fall back on GLSL 1.2
-            spdlog::warn("Could not init using OpenGL with normal GLSL version, falling back to GLSL 1.2");
+            flog::warn("Could not init using OpenGL with normal GLSL version, falling back to GLSL 1.2");
             if (!ImGui_ImplOpenGL3_Init("#version 120")) {
-                spdlog::error("Failed to initialize OpenGL with GLSL 1.2");
+                flog::error("Failed to initialize OpenGL with GLSL 1.2");
                 return -1;
             }
         }
@@ -188,7 +188,7 @@ namespace backend {
         // Set window size and fullscreen state
         glfwGetWindowSize(window, &_winWidth, &_winHeight);
         if (fullScreen) {
-            spdlog::info("Fullscreen: ON");
+            flog::info("Fullscreen: ON");
             fsWidth = _winWidth;
             fsHeight = _winHeight;
             glfwGetWindowPos(window, &fsPosX, &fsPosY);
@@ -253,7 +253,7 @@ namespace backend {
             if (ImGui::IsKeyPressed(GLFW_KEY_F11)) {
                 fullScreen = !fullScreen;
                 if (fullScreen) {
-                    spdlog::info("Fullscreen: ON");
+                    flog::info("Fullscreen: ON");
                     fsWidth = _winWidth;
                     fsHeight = _winHeight;
                     glfwGetWindowPos(window, &fsPosX, &fsPosY);
@@ -264,7 +264,7 @@ namespace backend {
                     core::configManager.release();
                 }
                 else {
-                    spdlog::info("Fullscreen: OFF");
+                    flog::info("Fullscreen: OFF");
                     glfwSetWindowMonitor(window, nullptr, fsPosX, fsPosY, fsWidth, fsHeight, 0);
                     core::configManager.acquire();
                     core::configManager.conf["fullscreen"] = false;

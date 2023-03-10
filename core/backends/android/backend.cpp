@@ -1,4 +1,4 @@
-#include <backend.h>
+#include <backend.h>log
 #include "android_backend.h"
 #include <core.h>
 #include <gui/gui.h>
@@ -12,7 +12,6 @@
 #include <EGL/egl.h>
 #include <GLES3/gl3.h>
 #include <stdint.h>
-#include <spdlog/sinks/android_sink.h>
 #include <gui/icons.h>
 #include <gui/style.h>
 #include <gui/menus/theme.h>
@@ -48,10 +47,10 @@ namespace backend {
     void handleAppCmd(struct android_app* app, int32_t appCmd) {
         switch (appCmd) {
         case APP_CMD_SAVE_STATE:
-            spdlog::warn("APP_CMD_SAVE_STATE");
+            flog::warn("APP_CMD_SAVE_STATE");
             break;
         case APP_CMD_INIT_WINDOW:
-            spdlog::warn("APP_CMD_INIT_WINDOW");
+            flog::warn("APP_CMD_INIT_WINDOW");
             if (pauseRendering && !exited) {
                 doPartialInit();
                 pauseRendering = false;
@@ -59,15 +58,15 @@ namespace backend {
             exited = false;
             break;
         case APP_CMD_TERM_WINDOW:
-            spdlog::warn("APP_CMD_TERM_WINDOW");
+            flog::warn("APP_CMD_TERM_WINDOW");
             pauseRendering = true;
             backend::end();
             break;
         case APP_CMD_GAINED_FOCUS:
-            spdlog::warn("APP_CMD_GAINED_FOCUS");
+            flog::warn("APP_CMD_GAINED_FOCUS");
             break;
         case APP_CMD_LOST_FOCUS:
-            spdlog::warn("APP_CMD_LOST_FOCUS");
+            flog::warn("APP_CMD_LOST_FOCUS");
             break;
         }
     }
@@ -78,7 +77,7 @@ namespace backend {
 
     int aquireWindow() {
         while (!app->window) {
-            spdlog::warn("Waiting on the shitty window thing"); std::this_thread::sleep_for(std::chrono::milliseconds(30));
+            flog::warn("Waiting on the shitty window thing"); std::this_thread::sleep_for(std::chrono::milliseconds(30));
             int out_events;
             struct android_poll_source* out_data;
 
@@ -97,7 +96,7 @@ namespace backend {
     }
 
     int init(std::string resDir) {
-        spdlog::warn("Backend init");
+        flog::warn("Backend init");
 
         // Get window
         aquireWindow();
@@ -176,7 +175,6 @@ namespace backend {
     void setMouseScreenPos(double x, double y) {}
 
     int renderLoop() {
-        spdlog::warn("BRUH: {0}", (void*)backend::app->window);
         while (true) {
             int out_events;
             struct android_poll_source* out_data;
@@ -187,7 +185,7 @@ namespace backend {
 
                 // Exit the app by returning from within the infinite loop
                 if (app->destroyRequested != 0) {
-                    spdlog::warn("ASKED TO EXIT");
+                    flog::warn("ASKED TO EXIT");
                     exited = true;
 
                     // Stop SDR
@@ -468,18 +466,13 @@ extern "C" {
 
         // Check if this is the first time we run or not
         if (backend::initialized) {
-            spdlog::warn("android_main called again");
+            flog::warn("android_main called again");
             backend::doPartialInit();
             backend::pauseRendering = false;
             backend::renderLoop();
             return;
         }
         backend::initialized = true;
-       
-        // prepare spdlog
-        auto console_sink = std::make_shared<spdlog::sinks::android_sink_st>("SDR++");
-        auto logger = std::shared_ptr<spdlog::logger>(new spdlog::logger("", { console_sink }));
-        spdlog::set_default_logger(logger);
 
         // Grab files dir
         std::string appdir = backend::getAppFilesDir();

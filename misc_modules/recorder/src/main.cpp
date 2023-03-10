@@ -23,7 +23,8 @@
 #include <utils/wav.h>
 
 #define CONCAT(a, b) ((std::string(a) + b).c_str())
-#define SILENCE_LVL 10e-20
+
+#define SILENCE_LVL 10e-6
 
 SDRPP_MOD_INFO{
     /* Name:            */ "recorder",
@@ -171,7 +172,7 @@ public:
         std::string extension = ".wav";
         std::string expandedPath = expandString(folderSelect.path + "/" + genFileName(nameTemplate, type, vfoName) + extension);
         if (!writer.open(expandedPath)) {
-            spdlog::error("Failed to open file for recording: {0}", expandedPath);
+            flog::error("Failed to open file for recording: {0}", expandedPath);
             return;
         }
 
@@ -315,11 +316,11 @@ private:
             }
             if (_this->recording) { style::endDisabled(); }
 
-            // if (ImGui::Checkbox(CONCAT("Ignore silence##_recorder_ignore_silence_", _this->name), &_this->ignoreSilence)) {
-            //     config.acquire();
-            //     config.conf[_this->name]["ignoreSilence"] = _this->ignoreSilence;
-            //     config.release(true);
-            // }
+            if (ImGui::Checkbox(CONCAT("Ignore silence##_recorder_ignore_silence_", _this->name), &_this->ignoreSilence)) {
+                config.acquire();
+                config.conf[_this->name]["ignoreSilence"] = _this->ignoreSilence;
+                config.release(true);
+            }
         }
 
         // Record button
@@ -338,7 +339,13 @@ private:
             uint64_t seconds = _this->writer.getSamplesWritten() / _this->samplerate;
             time_t diff = seconds;
             tm* dtm = gmtime(&diff);
-            ImGui::TextColored(ImVec4(1.0f, 0.0f, 0.0f, 1.0f), "Recording %02d:%02d:%02d", dtm->tm_hour, dtm->tm_min, dtm->tm_sec);
+
+            if (_this->ignoreSilence && _this->ignoringSilence) {
+                ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "Paused %02d:%02d:%02d", dtm->tm_hour, dtm->tm_min, dtm->tm_sec);
+            }
+            else {
+                ImGui::TextColored(ImVec4(1.0f, 0.0f, 0.0f, 1.0f), "Recording %02d:%02d:%02d", dtm->tm_hour, dtm->tm_min, dtm->tm_sec);
+            }
         }
     }
 
@@ -480,13 +487,31 @@ private:
 
     static void stereoHandler(dsp::stereo_t* data, int count, void* ctx) {
         RecorderModule* _this = (RecorderModule*)ctx;
-        // TODO: Ignore silence
+        if (_this->ignoreSilence) {
+            float absMax = 0.0f;
+            float* _data = (float*)data;
+            int _count = count * 2;
+            for (int i = 0; i < _count; i++) {
+                float val = fabsf(_data[i]);
+                if (val > absMax) { absMax = val; }
+            }
+            _this->ignoringSilence = (absMax < SILENCE_LVL);
+            if (_this->ignoringSilence) { return; }
+        }
         _this->writer.write((float*)data, count);
     }
 
     static void monoHandler(float* data, int count, void* ctx) {
         RecorderModule* _this = (RecorderModule*)ctx;
-        // TODO: Ignore silence
+        if (_this->ignoreSilence) {
+            float absMax = 0.0f;
+            for (int i = 0; i < count; i++) {
+                float val = fabsf(data[i]);
+                if (val > absMax) { absMax = val; }
+            }
+            _this->ignoringSilence = (absMax < SILENCE_LVL);
+            if (_this->ignoringSilence) { return; }
+        }
         _this->writer.write(data, count);
     }
 
@@ -529,6 +554,7 @@ private:
     dsp::stereo_t audioLvl = { -100.0f, -100.0f };
 
     bool recording = false;
+    bool ignoringSilence = false;
     wav::Writer writer;
     std::recursive_mutex recMtx;
     dsp::stream<dsp::complex_t>* basebandStream;
@@ -557,9 +583,9 @@ MOD_EXPORT void _INIT_() {
     // Create default recording directory
     std::string root = (std::string)core::args["root"];
     if (!std::filesystem::exists(root + "/recordings")) {
-        spdlog::warn("Recordings directory does not exist, creating it");
+        flog::warn("Recordings directory does not exist, creating it");
         if (!std::filesystem::create_directory(root + "/recordings")) {
-            spdlog::error("Could not create recordings directory");
+            flog::error("Could not create recordings directory");
         }
     }
     json def = json({});

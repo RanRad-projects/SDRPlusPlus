@@ -487,7 +487,6 @@ I will soon publish a contributing.md listing the code style to use.
 * [SoapySDR (PothosWare)](https://github.com/pothosware/SoapySDR)
 * [Dear ImGui (ocornut)](https://github.com/ocornut/imgui)
 * [implot (epezent)](https://github.com/epezent/implot)
-* [spdlog (gabime)](https://github.com/gabime/spdlog)
 * [json (nlohmann)](https://github.com/nlohmann/json)
 * [rtaudio](http://www.portaudio.com/)
 * [Portable File Dialogs](https://github.com/samhocevar/portable-file-dialogs)
