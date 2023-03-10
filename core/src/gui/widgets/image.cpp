@@ -53,6 +53,10 @@ namespace ImGui {
         memset(buffer, 0, _width * _height * 4);
     }
 
+    void ImageDisplay::update() {
+        newData = true;
+    }
+
     void ImageDisplay::updateTexture() {
         glBindTexture(GL_TEXTURE_2D, textureId);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);

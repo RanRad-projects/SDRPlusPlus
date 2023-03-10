@@ -14,14 +14,15 @@ namespace ImGui {
         ~ImageDisplay();
         void draw(const ImVec2& size_arg = ImVec2(0, 0));
         void swap();
+        void update();
 
         void* buffer;
+        void* activeBuffer;
 
     private:
         void updateTexture();
 
         std::mutex bufferMtx;
-        void* activeBuffer;
 
         int _width;
         int _height;
