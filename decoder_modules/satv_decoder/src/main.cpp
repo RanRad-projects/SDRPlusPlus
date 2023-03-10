@@ -261,8 +261,8 @@ private:
                     }
                     _this->outfile.open(_this->expandString(_this->folderSelect.path + "/" + genFileName("$t_$f_$h-$m-$s_$d-$M-$y", "video", "video") + ".bin"), std::ios::binary);
                     if(_this->outfile.is_open()) {
-                        _this->outfile << (uint64_t)_this->width;
-                        _this->outfile << (uint64_t)_this->height;
+                        uint64_t wh[2] = {(uint64_t)_this->width, (uint64_t)_this->height};
+                        _this->outfile.write((char *)&wh, sizeof(wh));
                         _this->recording = true;
                     }
                     _this->outfile_mtx.unlock();
