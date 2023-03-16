@@ -12,6 +12,7 @@
 #include <imgui.h>
 #include <module.h>
 #include <signal_path/signal_path.h>
+#include <ctime>
 
 #include <dsp/demod/quadrature.h>
 #include <dsp/sink/handler_sink.h>
@@ -62,7 +63,6 @@ public:
         float val;
         float avg;
         float imval;
-        int x_shifted_pos = 0;
         int pos = 0;
         for (int i = 0; i < count; i++) {
             val = data[i];
@@ -106,8 +106,8 @@ public:
 
                 int offset = xoffset + (yoffset * _width);
 
-                if(auto_sync) {
-                    if(yoffset > 10) { // we don't want to skip too much by accident
+                if (auto_sync) {
+                    if (yoffset > 10) { // we don't want to skip too much by accident
                         skipsamples = offset;
                     }
                 }
@@ -179,7 +179,7 @@ public:
         tv_dec = new tv_rx(width, height, sync_level, minLvl, spanLvl, live_view, auto_sync);
 
         vfo = sigpath::vfoManager.createVFO(name, ImGui::WaterfallVFO::REF_CENTER, 0, samplerate, samplerate, MIN_SR, samplerate, false);
-        
+
         imgbuf = new uint8_t[width * height];
 
         demod.init(vfo->output, MAX_SR, MAX_SR / 2.0f);
@@ -255,14 +255,14 @@ private:
             if (ImGui::Button("Record", ImVec2(menuWidth, 0))) {
                 if (_this->folderSelect.pathIsValid()) {
                     _this->outfile_mtx.lock();
-                    if(_this->outfile.is_open()) {
+                    if (_this->outfile.is_open()) {
                         _this->outfile.close();
                         _this->outfile.clear();
                     }
                     _this->outfile.open(_this->expandString(_this->folderSelect.path + "/" + genFileName("$t_$f_$h-$m-$s_$d-$M-$y", "video", "video") + ".bin"), std::ios::binary);
-                    if(_this->outfile.is_open()) {
-                        uint64_t wh[2] = {(uint64_t)_this->width, (uint64_t)_this->height};
-                        _this->outfile.write((char *)&wh, sizeof(wh));
+                    if (_this->outfile.is_open()) {
+                        uint64_t wh[2] = { (uint64_t)_this->width, (uint64_t)_this->height };
+                        _this->outfile.write((char*)&wh, sizeof(wh));
                         _this->recording = true;
                     }
                     _this->outfile_mtx.unlock();
@@ -273,7 +273,7 @@ private:
         else {
             if (ImGui::Button("Stop recording", ImVec2(menuWidth, 0))) {
                 _this->outfile_mtx.lock();
-                if(_this->outfile.is_open()) {
+                if (_this->outfile.is_open()) {
                     _this->outfile.close();
                     _this->outfile.clear();
                 }
@@ -290,10 +290,6 @@ private:
         if (ImGui::Checkbox("Auto sync", &_this->auto_sync)) {
             _this->tv_dec->set_parameters(_this->sync_level, _this->minLvl, _this->spanLvl, _this->live_view, _this->auto_sync);
         }
-
-        ImGui::LeftLabel("X shift");
-        ImGui::FillWidth();
-        ImGui::SliderInt("##xshift", &_this->x_shift, 0, _this->width);
 
         ImGui::LeftLabel("Sync");
         ImGui::FillWidth();
@@ -332,13 +328,30 @@ private:
         if (_this->tv_dec->draw(buf)) {
             _this->img->update();
             if (_this->recording && !_this->live_view) {
-                uint8_t *bufu8 = (uint8_t*)buf;
-                for(size_t i = 0; i < _this->width * _this->height; i++) {
+                uint8_t* bufu8 = (uint8_t*)buf;
+                for (size_t i = 0; i < _this->width * _this->height; i++) {
                     _this->imgbuf[i] = *bufu8;
                     bufu8 += 4; // RGBA
                 }
+
+                time_t now = time(nullptr);
+                tm ltm;
+                localtime_r(&now, &ltm);
+                uint8_t sec = (uint8_t)ltm.tm_sec;
+                uint8_t min = (uint8_t)ltm.tm_min;
+                uint8_t hour = (uint8_t)ltm.tm_hour;
+                uint8_t day = (uint8_t)ltm.tm_mday;
+                uint8_t month = (uint8_t)(ltm.tm_mon + 1);
+                uint16_t year = (uint16_t)(ltm.tm_year + 1900);
+
                 _this->outfile_mtx.lock();
-                _this->outfile.write((char *)_this->imgbuf, _this->width * _this->height);
+                _this->outfile.write((char*)&sec, 1);
+                _this->outfile.write((char*)&min, 1);
+                _this->outfile.write((char*)&hour, 1);
+                _this->outfile.write((char*)&day, 1);
+                _this->outfile.write((char*)&month, 1);
+                _this->outfile.write((char*)&year, 2);
+                _this->outfile.write((char*)_this->imgbuf, _this->width * _this->height);
                 _this->outfile_mtx.unlock();
             }
         }
@@ -404,8 +417,6 @@ private:
     int xpos = 0;
     int ypos = 0;
 
-    int x_shift = 156;
-
     float sync_level = -0.058f;
     int sync_count = 0;
 
@@ -425,7 +436,7 @@ private:
 
     tv_rx* tv_dec;
 
-    uint8_t *imgbuf;
+    uint8_t* imgbuf;
 
     std::string root;
 };
