@@ -335,14 +335,13 @@ private:
                 }
 
                 time_t now = time(nullptr);
-                tm ltm;
-                localtime_r(&now, &ltm);
-                uint8_t sec = (uint8_t)ltm.tm_sec;
-                uint8_t min = (uint8_t)ltm.tm_min;
-                uint8_t hour = (uint8_t)ltm.tm_hour;
-                uint8_t day = (uint8_t)ltm.tm_mday;
-                uint8_t month = (uint8_t)(ltm.tm_mon + 1);
-                uint16_t year = (uint16_t)(ltm.tm_year + 1900);
+                tm* ltm = localtime(&now);
+                uint8_t sec = (uint8_t)ltm->tm_sec;
+                uint8_t min = (uint8_t)ltm->tm_min;
+                uint8_t hour = (uint8_t)ltm->tm_hour;
+                uint8_t day = (uint8_t)ltm->tm_mday;
+                uint8_t month = (uint8_t)(ltm->tm_mon + 1);
+                uint16_t year = (uint16_t)(ltm->tm_year + 1900);
 
                 _this->outfile_mtx.lock();
                 _this->outfile.write((char*)&sec, 1);
