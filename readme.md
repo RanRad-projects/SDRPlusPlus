@@ -307,7 +307,7 @@ Here is an example of build commands that will build almost all modules at the t
 ```sh
 mkdir build
 cd build
-cmake .. -DOPT_BUILD_SOAPY_SOURCE=OFF -DOPT_BUILD_BLADERF_SOURCE=ON -DOPT_BUILD_AUDIO_SINK=OFF -DOPT_BUILD_PORTAUDIO_SINK=ON -DOPT_BUILD_NEW_PORTAUDIO_SINK=ON -DOPT_BUILD_M17_DECODER=ON -DUSE_BUNDLE_DEFAULTS=ON -DCMAKE_BUILD_TYPE=Release
+cmake .. -DOPT_BUILD_SOAPY_SOURCE=OFF -DOPT_BUILD_BLADERF_SOURCE=ON -DOPT_BUILD_AUDIO_SOURCE=OFF -DOPT_BUILD_AUDIO_SINK=OFF -DOPT_BUILD_PORTAUDIO_SINK=ON -DOPT_BUILD_NEW_PORTAUDIO_SINK=ON -DOPT_BUILD_M17_DECODER=ON -DUSE_BUNDLE_DEFAULTS=ON -DCMAKE_BUILD_TYPE=Release
 make -j<N>
 ```
 
@@ -463,7 +463,7 @@ I will soon publish a contributing.md listing the code style to use.
 * [W4IPA](https://twitter.com/W4IPAstroke5)
 * William Arcand (W1WRA)
 * [Yves Rougy](https://www.twitch.tv/yorzian)
-* [Zipper](github.com/reppiZ)
+* [Zipper](https://github.com/reppiZ)
 
 ## Contributors
 
