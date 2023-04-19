@@ -408,6 +408,11 @@ private:
 
     FolderSelect folderSelect;
 
+    // for PAL:
+    // SR 11250000
+    // width 720
+    // height 625
+
     double samplerate = 100000;
 
     int width = 1285;
