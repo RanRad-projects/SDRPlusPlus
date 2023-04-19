@@ -57,7 +57,9 @@ If `libvolk2-dev` is not available, use `libvolk1-dev`.
 
 ### Arch-based
 
-Install the latest release from the [sdrpp-git](https://aur.archlinux.org/packages/sdrpp-git/) AUR package
+Install from source following the instructions below.
+
+**WARNING: The sdrpp-git AUR package is no longer official, it is not recommended to use it.**
 
 ### Other
 
@@ -332,12 +334,13 @@ Modules in beta are still included in releases for the most part but not enabled
 |----------------------|------------|-------------------|--------------------------------|:---------------:|:-----------------------:|:---------------------------:|
 | airspy_source        | Working    | libairspy         | OPT_BUILD_AIRSPY_SOURCE        | ✅              | ✅                     | ✅                         |
 | airspyhf_source      | Working    | libairspyhf       | OPT_BUILD_AIRSPYHF_SOURCE      | ✅              | ✅                     | ✅                         |
-| bladerf_source       | Working    | libbladeRF        | OPT_BUILD_BLADERF_SOURCE       | ⛔              | ⚠️ (not Debian Buster) | ✅                         |
+| bladerf_source       | Working    | libbladeRF        | OPT_BUILD_BLADERF_SOURCE       | ⛔              | ✅ (not Debian Buster) | ✅                         |
 | file_source          | Working    | -                 | OPT_BUILD_FILE_SOURCE          | ✅              | ✅                     | ✅                         |
 | raw_file_source      | Working    | -                 | OPT_BUILD_RAW_FILE_SOURCE      | ✅              | ✅                     | ⛔                         |
 | hackrf_source        | Working    | libhackrf         | OPT_BUILD_HACKRF_SOURCE        | ✅              | ✅                     | ✅                         |
-| hermes_source        | Beta       | -                 | OPT_BUILD_HERMES_SOURCE        | ✅              | ✅                     | ⛔                         |
+| hermes_source        | Beta       | -                 | OPT_BUILD_HERMES_SOURCE        | ✅              | ✅                     | ✅                         |
 | limesdr_source       | Working    | liblimesuite      | OPT_BUILD_LIMESDR_SOURCE       | ⛔              | ✅                     | ✅                         |
+| perseus_source       | Beta       | libperseus-sdr    | OPT_BUILD_PERSEUS_SOURCE       | ⛔              | ⛔                     | ⛔                         |
 | plutosdr_source      | Working    | libiio, libad9361 | OPT_BUILD_PLUTOSDR_SOURCE      | ✅              | ✅                     | ✅                         |
 | rfspace_source       | Working    | -                 | OPT_BUILD_RFSPACE_SOURCE       | ✅              | ✅                     | ✅                         |
 | rtl_sdr_source       | Working    | librtlsdr         | OPT_BUILD_RTL_SDR_SOURCE       | ✅              | ✅                     | ✅                         |
@@ -354,7 +357,7 @@ Modules in beta are still included in releases for the most part but not enabled
 
 | Name               | Stage      | Dependencies | Option                       | Built by default| Built in Release | Enabled in SDR++ by default |
 |--------------------|------------|--------------|------------------------------|:---------------:|:----------------:|:---------------------------:|
-| android_audio_sink | Working    | -            | OPT_BUILD_ANDROID_AUDIO_SINK | ⛔              | ✅              | ⛔                         |
+| android_audio_sink | Working    | -            | OPT_BUILD_ANDROID_AUDIO_SINK | ⛔              | ✅              | ✅ (Android only)          |
 | audio_sink         | Working    | rtaudio      | OPT_BUILD_AUDIO_SINK         | ✅              | ✅              | ✅                         |
 | network_sink       | Working    | -            | OPT_BUILD_NETWORK_SINK       | ✅              | ✅              | ✅                         |
 | new_portaudio_sink | Beta       | portaudio    | OPT_BUILD_NEW_PORTAUDIO_SINK | ⛔              | ✅              | ⛔                         |
@@ -377,14 +380,14 @@ Modules in beta are still included in releases for the most part but not enabled
 
 | Name                | Stage      | Dependencies | Option                        | Built by default | Built in Release | Enabled in SDR++ by default |
 |---------------------|------------|--------------|-------------------------------|:----------------:|:----------------:|:---------------------------:|
-| discord_integration | Working    | -            | OPT_BUILD_DISCORD_PRESENCE    | ✅              | ✅               | ⛔                         |
-| frequency_manager   | Working    | -            | OPT_BUILD_FREQUENCY_MANAGER   | ✅              | ✅               | ✅                         |
-| recorder            | Working    | -            | OPT_BUILD_RECORDER            | ✅              | ✅               | ✅                         |
-| rigctl_client       | Unfinished | -            | OPT_BUILD_RIGCTL_CLIENT       | ⛔              | ⛔               | ⛔                         |
-| rigctl_server       | Working    | -            | OPT_BUILD_RIGCTL_SERVER       | ✅              | ✅               | ✅                         |
-| scanner             | Beta       | -            | OPT_BUILD_SCANNER             | ✅              | ✅               | ✅                         |
-| scheduler           | Unfinished | -            | OPT_BUILD_SCHEDULER           | ⛔              | ⛔               | ⛔                         |
-| signalstrengthgraph | Working    | -            | OPT_BUILD_SIGNALSTRENGTHGRAPH | ✅              | ✅               | ⛔                         |
+| discord_integration | Working    | -            | OPT_BUILD_DISCORD_PRESENCE    | ✅               | ✅               | ⛔                          |
+| frequency_manager   | Working    | -            | OPT_BUILD_FREQUENCY_MANAGER   | ✅               | ✅               | ✅                          |
+| recorder            | Working    | -            | OPT_BUILD_RECORDER            | ✅               | ✅               | ✅                          |
+| rigctl_client       | Unfinished | -            | OPT_BUILD_RIGCTL_CLIENT       | ✅               | ✅               | ⛔                          |
+| rigctl_server       | Working    | -            | OPT_BUILD_RIGCTL_SERVER       | ✅               | ✅               | ✅                          |
+| scanner             | Beta       | -            | OPT_BUILD_SCANNER             | ✅               | ✅               | ⛔                          |
+| scheduler           | Unfinished | -            | OPT_BUILD_SCHEDULER           | ⛔               | ⛔               | ⛔                          |
+| signalstrengthgraph | Working    | -            | OPT_BUILD_SIGNALSTRENGTHGRAPH | ✅               | ✅               | ⛔                          |
 
 # Troubleshooting
 
