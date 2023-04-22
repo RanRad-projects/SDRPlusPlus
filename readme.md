@@ -1,14 +1,11 @@
 # SDR++, The bloat-free SDR software<br>
 
+## Important: This is a fork. If you have any problems with this message me on Discord ``M;#0395``. Please do not ask Ryzerth about support for this fork.
+
 ![Screenshot](https://i.imgur.com/Ter2MQJ.png)
 SDR++ is a cross-platform and open source SDR software with the aim of being bloat free and simple to use.
 
 ![Build](https://github.com/AlexandreRouma/SDRPlusPlus/workflows/Build%20Binaries/badge.svg)
-
-* [Patreon](https://patreon.com/ryzerth)
-* [Discord Server](https://discord.gg/aFgWjyD)
-* [Reddit](https://www.reddit.com/r/sdrpp/)
-* IRC: `#sdrpp` ([libera.chat](https://libera.chat)) __**NO LONGER ACTIVE, JOIN DISCORD INSTEAD**__
 
 ## Features
 
@@ -430,43 +427,6 @@ Feel free to submit pull requests and report bugs via the GitHub issue tracker.
 I will soon publish a contributing.md listing the code style to use.
 
 # Credits
-
-## Patrons
-
-* Bob Logan
-* [Christian Häusler](https://github.com/corvus-ch)
-* Croccydile
-* Dale L Puckett (K0HYD)
-* [Daniele D'Agnelli](https://linkedin.com/in/dagnelli)
-* D. Jones
-* Dexruus
-* [EB3FRN](https://www.eb3frn.net/)
-* Eric Johnson
-* Ernest Murphy (NH7L)
-* Flinger Films
-* [Frank Werner (HB9FXQ)](https://twitter.com/HB9FXQ)
-* gringogrigio
-* Jeff Moe
-* Joe Cupano
-* KD1SQ
-* Kezza
-* Krys Kamieniecki
-* Lee Donaghy
-* Lee KD1SQ
-* .lozenge. (Hank Hill)
-* Martin Herren (HB9FXX)
-* ON4MU
-* [Passion-Radio.com](https://passion-radio.com/)
-* Paul Maine
-* Peter Betz
-* [Scanner School](https://scannerschool.com/)
-* Scott Palmer
-* [SignalsEverywhere](https://signalseverywhere.com/)
-* Syne Ardwin (WI9SYN)
-* [W4IPA](https://twitter.com/W4IPAstroke5)
-* William Arcand (W1WRA)
-* [Yves Rougy](https://www.twitch.tv/yorzian)
-* [Zipper](https://github.com/reppiZ)
 
 ## Contributors
 
